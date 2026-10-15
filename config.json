@@ -1,0 +1,60 @@
+{
+  "apis": {
+    "merchant_balance": {
+      "url": "https://api.prembly.com/api/v1/wallet",
+      "method": "POST",
+      "headers": {
+        "Authorization": "Bearer TOKEN_HERE",
+        "Content-Type": "application/json"
+      },
+      "payload_template": {
+        "account_id": "{account}"
+      },
+      "response_balance_field": "data.balance"
+    }
+  },
+  "alerts": [
+    {
+      "id": "ALERT_WAL_01",
+      "api_ref": "merchant_balance",
+      "params": {
+        "account": "ACC-9921"
+      },
+      "threshold": {
+        "operator": "<",
+        "value": 1000.00
+      },
+      "schedule_cron": "0 * * * *",
+      "channels": [
+        {
+          "type": "sms",
+          "recipient": "+1234567890",
+          "api_gateway": "https://sms.gateway/send"
+        },
+        {
+          "type": "smtp",
+          "recipient": "finance@company.com"
+        }
+      ]
+    },
+    {
+      "id": "ALERT_WAL_02",
+      "api_ref": "merchant_balance",
+      "params": {
+        "account": "ACC-9921"
+      },
+      "threshold": {
+        "operator": "<",
+        "value": 200.00
+      },
+      "schedule_cron": "*/5 * * * *",
+      "channels": [
+        {
+          "type": "webhook",
+          "url": "https://partner.com/alerts/receive",
+          "method": "POST"
+        }
+      ]
+    }
+  ]
+}
